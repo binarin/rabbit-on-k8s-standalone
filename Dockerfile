@@ -37,5 +37,4 @@ RUN set -x \
 
 COPY enabled_plugins /etc/rabbitmq/enabled_plugins
 COPY rabbitmq-env.conf /etc/rabbitmq/rabbitmq-env.conf
-COPY rabbitmq.config /etc/rabbitmq/rabbitmq.config
 COPY start.sh /start.sh
