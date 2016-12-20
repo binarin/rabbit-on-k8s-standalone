@@ -1,0 +1,38 @@
+* Steps to reproduce the setup on the minikube
+
+  - Start minikube with you preferred defults
+  #+BEGIN_SRC sh
+    minikube start --cpus=2 --memory=4096 --vm-driver=kvm
+  #+END_SRC
+
+  - Create a namespace so you can easily reset an environment when something goes wrong
+  #+BEGIN_SRC sh
+    kubectl create namespace demo
+  #+END_SRC
+
+  - Make some etcd installation available under ~etcd~ name
+  #+BEGIN_SRC sh
+    kubectl run etcd --image=microbox/etcd --port=4001 --namespace=demo -- --name etcd
+    kubectl --namespace=demo expose deployment etcd
+  #+END_SRC
+
+  - Build a Docker image
+  #+BEGIN_SRC sh
+    docker build . -t rabbitmq-autocluster
+  #+END_SRC
+
+  - Initialize k8s secret for erlang cookie
+  #+BEGIN_SRC sh
+    kubectl create secret generic --namespace=demo erlang.cookie --from-file=./erlang.cookie
+  #+END_SRC
+
+  - Deploy RabbitMQ cluster
+  #+BEGIN_SRC sh
+    kubectl create -f rabbitmq.yaml
+  #+END_SRC
+
+  - Check that clustering indeed worked
+  #+BEGIN_SRC sh
+    FIRST_POD=$(kubectl get pods --namespace demo -l 'app=rabbitmq' -o jsonpath='{.items[0].metadata.name }')
+    kubectl exec --namespace=demo $FIRST_POD rabbitmqctl cluster_status
+  #+END_SRC
