@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+  namespace: demo
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq-autocluster
+        image: rabbitmq-autocluster:latest
+        imagePullPolicy: Never
+        env:
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: ERLANG_COOKIE
+            valueFrom:
+              secretKeyRef:
+                name: erlang.cookie
+                key: erlang.cookie
+        command:
+          - "/start.sh"
