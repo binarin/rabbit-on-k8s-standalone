@@ -18,6 +18,7 @@
 
   - Build a Docker image
   #+BEGIN_SRC sh
+    eval $(minikube docker-env)
     docker build . -t rabbitmq-autocluster
   #+END_SRC
 
