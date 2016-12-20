@@ -1,5 +1,7 @@
 FROM debian:jessie
 ENV DEBIAN_FRONTEND noninteractive
+
+# jessie default erlang version is outdated, install something fresher from backports
 RUN set -x \
  && echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/backports.list \
  && apt-get update \
@@ -35,4 +37,5 @@ RUN set -x \
 
 COPY enabled_plugins /etc/rabbitmq/enabled_plugins
 COPY rabbitmq-env.conf /etc/rabbitmq/rabbitmq-env.conf
+COPY rabbitmq.config /etc/rabbitmq/rabbitmq.config
 COPY start.sh /start.sh
