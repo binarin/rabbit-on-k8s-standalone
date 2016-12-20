@@ -1,7 +1,7 @@
 FROM debian:jessie
 ENV DEBIAN_FRONTEND noninteractive
 
-# jessie default erlang version is outdated, install something fresher from backports
+# erlang in jessie is outdated, install something fresher from backports
 RUN set -x \
  && echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/backports.list \
  && apt-get update \
@@ -35,6 +35,8 @@ RUN set -x \
  && chmod +x /usr/local/bin/gosu \
  && gosu nobody true
 
+# We need to enable autocluster plugin
 COPY enabled_plugins /etc/rabbitmq/enabled_plugins
+
 COPY rabbitmq-env.conf /etc/rabbitmq/rabbitmq-env.conf
 COPY start.sh /start.sh

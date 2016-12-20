@@ -13,12 +13,15 @@ spec:
       containers:
       - name: rabbitmq-autocluster
         image: rabbitmq-autocluster:latest
+        # `Never` as we are not using registry in our `minikube` setup
         imagePullPolicy: Never
         env:
+          # For consupmption by rabbitmq-env.conf
           - name: MY_POD_IP
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
+          # start.sh will store this value to a proper location in filesystem
           - name: ERLANG_COOKIE
             valueFrom:
               secretKeyRef:
