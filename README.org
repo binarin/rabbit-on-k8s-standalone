@@ -1,36 +1,36 @@
 * Steps to reproduce the setup on the minikube
 
   - Start minikube with you preferred defults
-  #+BEGIN_SRC sh
-    minikube start --cpus=2 --memory=4096 --vm-driver=kvm
-  #+END_SRC
+    #+BEGIN_SRC sh
+      minikube start --cpus=2 --memory=4096 --vm-driver=kvm
+    #+END_SRC
 
   - Create a namespace so you can easily reset an environment when something goes wrong
-  #+BEGIN_SRC sh
-    kubectl create namespace demo
-  #+END_SRC
+    #+BEGIN_SRC sh
+      kubectl create namespace demo
+    #+END_SRC
 
   - Make some etcd installation available under ~etcd~ name
-  #+BEGIN_SRC sh
-    kubectl run etcd --image=microbox/etcd --port=4001 --namespace=demo -- --name etcd
-    kubectl --namespace=demo expose deployment etcd
-  #+END_SRC
+    #+BEGIN_SRC sh
+      kubectl run etcd --image=microbox/etcd --port=4001 --namespace=demo -- --name etcd
+      kubectl --namespace=demo expose deployment etcd
+    #+END_SRC
 
   - Build a Docker image
-  #+BEGIN_SRC sh
-    eval $(minikube docker-env)
-    docker build . -t rabbitmq-autocluster
-  #+END_SRC
+    #+BEGIN_SRC sh
+      eval $(minikube docker-env)
+      docker build . -t rabbitmq-autocluster
+    #+END_SRC
 
   - Initialize k8s secret for erlang cookie
-  #+BEGIN_SRC sh
-    kubectl create secret generic --namespace=demo erlang.cookie --from-file=./erlang.cookie
-  #+END_SRC
+    #+BEGIN_SRC sh
+      kubectl create secret generic --namespace=demo erlang.cookie --from-file=./erlang.cookie
+    #+END_SRC
 
   - Deploy RabbitMQ cluster
-  #+BEGIN_SRC sh
-    kubectl create -f rabbitmq.yaml
-  #+END_SRC
+    #+BEGIN_SRC sh
+      kubectl create -f rabbitmq.yaml
+    #+END_SRC
 
   - Check that clustering indeed worked
     #+BEGIN_SRC sh
@@ -40,7 +40,7 @@
 
     And we should see some output similar to the following one (where
     the most important bit of information is that ~nodes~ and
-    ~running_nodes~ both contain 3 names)
+    ~running_nodes~ both contain 3 names):
     #+BEGIN_EXAMPLE
       Cluster status of node 'rabbit@172.17.0.3' ...
       [{nodes,[{disc,['rabbit@172.17.0.3','rabbit@172.17.0.4',
