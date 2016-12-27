@@ -33,7 +33,23 @@
   #+END_SRC
 
   - Check that clustering indeed worked
-  #+BEGIN_SRC sh
-    FIRST_POD=$(kubectl get pods --namespace demo -l 'app=rabbitmq' -o jsonpath='{.items[0].metadata.name }')
-    kubectl exec --namespace=demo $FIRST_POD rabbitmqctl cluster_status
-  #+END_SRC
+    #+BEGIN_SRC sh
+      FIRST_POD=$(kubectl get pods --namespace demo -l 'app=rabbitmq' -o jsonpath='{.items[0].metadata.name }')
+      kubectl exec --namespace=demo $FIRST_POD rabbitmqctl cluster_status
+    #+END_SRC
+
+    And we should see some output similar to the following one (where
+    the most important bit of information is that ~nodes~ and
+    ~running_nodes~ both contain 3 names)
+    #+BEGIN_EXAMPLE
+      Cluster status of node 'rabbit@172.17.0.3' ...
+      [{nodes,[{disc,['rabbit@172.17.0.3','rabbit@172.17.0.4',
+                      'rabbit@172.17.0.7']}]},
+       {running_nodes,['rabbit@172.17.0.4','rabbit@172.17.0.7','rabbit@172.17.0.3']},
+       {cluster_name,<<"rabbit@rabbitmq-deployment-861116474-cmshz">>},
+       {partitions,[]},
+       {alarms,[{'rabbit@172.17.0.4',[]},
+                {'rabbit@172.17.0.7',[]},
+                {'rabbit@172.17.0.3',[]}]}]
+
+    #+END_EXAMPLE
