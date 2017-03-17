@@ -1,4 +1,8 @@
-* Steps to reproduce the setup on the minikube
+* RabbitMQ cluster on k8s suitable for OpenStack control plane workloads
+
+Choices and tradeoffs are explained in detail at https://www.mirantis.com/blog/clustered-rabbitmq-kubernetes/
+
+** Steps to reproduce the setup on the minikube
 
   - Start minikube with you preferred defults
     #+BEGIN_SRC sh
